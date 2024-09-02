@@ -52,10 +52,11 @@ def upload():
   
         # Get the list of files from webpage 
         files = request.files.getlist("file") 
-  
+        table_list=['jobs_table', 'departments_table', 'hired_employees_table']
         # Iterate for each file in the files List, and Save them 
-        for file in files: 
-            file.save(file.filename) 
+        for index, file in enumerate(files): 
+            if (file.filename)!='':
+                file.save(table_list[index]+'.csv') 
         return "<h1>Files Uploaded Successfully.!</h1>"
 
 ##  Run app

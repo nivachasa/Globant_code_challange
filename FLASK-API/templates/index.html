@@ -1,11 +1,73 @@
-<html> 
-<head> 
-	<title>Upload CSV files : GFG</title> 
-</head> 
-<body> 
-	<form action = "/upload" method="POST" enctype="multipart/form-data"> 
-		<input type="file" name="file" accept=".csv" /> 
-		<input type = "submit" value="Upload"> 
-	</form> 
-</body> 
-</html> 
+<html>
+<head>
+    <title>Upload Multiple Files : GFG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+            margin: auto;
+        }
+        fieldset {
+            border: none;
+        }
+        legend {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file');
+            const submitButton = document.getElementById('submit-button');
+            
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length === 0) {
+                    fileInput.setCustomValidity('Por favor, seleccione al menos un archivo para subir.');
+                    submitButton.value = 'Subir archivos';
+                } else {
+                    fileInput.setCustomValidity('');
+                    submitButton.value = 'Archivos seleccionados, listo para subir';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <fieldset>
+            <legend>Upload Files</legend>
+            <label for="file">Choose JOBS CSV file to upload:</label>
+			<input type="file" name="file" accept=".csv" /><br>
+			<label for="file">Choose DEPARTMENTS CSV file to upload:</label>
+			<input type="file" name="file" accept=".csv" /><br>
+			<label for="file">Choose HIRED EMPLOYEES CSV file to upload:</label>
+			<input type="file" name="file" accept=".csv" /><br>
+            <input type="submit" value="Upload">
+        </fieldset>
+    </form>
+</body>
+</html>
