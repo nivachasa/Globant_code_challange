@@ -1,5 +1,5 @@
 ##Import libraies
-from flask import Flask
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
 ## Cretae app Flask
@@ -44,7 +44,19 @@ class HiredEmployees(db.Model):
 ## Main function 
 @app.route('/')
 def home():
-        return '<h1>Code Challange</h1>'
+        return render_template("index.html")
+
+@app.route('/upload', methods=['POST']) 
+def upload(): 
+    if request.method == 'POST': 
+  
+        # Get the list of files from webpage 
+        files = request.files.getlist("file") 
+  
+        # Iterate for each file in the files List, and Save them 
+        for file in files: 
+            file.save(file.filename) 
+        return "<h1>Files Uploaded Successfully.!</h1>"
 
 ##  Run app
 if __name__=='__main__':
