@@ -1,13 +1,13 @@
 ##Import libraies
-from flask import Flask
-from flask_sqlalchemy from flask_sqlalchemy
+from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 
 ## Cretae app Flask
 app=Flask(__name__)
 
 ## DB location
-app.config['SQL_DATABASE']= 'sqlite:///database.db'
-db = SQLAklchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///database.db'
+db = SQLAlchemy(app)
 
 ## Class Departments table definition
 class Departments(db.Model):
@@ -35,8 +35,8 @@ class HiredEmployees(db.Model):
     name=db.Column(db.String(80), unique=False, nullable=False)
     ## ISO format: year, month, day, hour, minutes, seconds, and milliseconds. Ex:2021-07-27T16:02:08Z
     datetime=db.Column(db.String(20), unique=False, nullable=False)
-    department_id=db.Column(db.String(20), db.ForeignKey(departments.id), nullable=False)
-    job_id=db.Column(db.String(20), db.ForeignKey(jobs.id), nullable=False)
+    department_id=db.Column(db.String(20), db.ForeignKey(Departments.id), nullable=False)
+    job_id=db.Column(db.String(20), db.ForeignKey(Jobs.id), nullable=False)
 
     def __repr__(self):
         return f"{self.id}, {self.name}"
@@ -44,7 +44,20 @@ class HiredEmployees(db.Model):
 ## Main function 
 @app.route('/')
 def home():
-        return '<h1>Code Challange</h1>'
+        return render_template("index.html")
+
+@app.route('/upload', methods=['POST']) 
+def upload(): 
+    if request.method == 'POST': 
+  
+        # Get the list of files from webpage 
+        files = request.files.getlist("file") 
+        table_list=['jobs_table', 'departments_table', 'hired_employees_table']
+        # Iterate for each file in the files List, and Save them 
+        for index, file in enumerate(files): 
+            if (file.filename)!='':
+                file.save(table_list[index]+'.csv') 
+        return "<h1>Files Uploaded Successfully.!</h1>"
 
 ##  Run app
 if __name__=='__main__':
