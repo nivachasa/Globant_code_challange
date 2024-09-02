@@ -1,0 +1,12 @@
+--- Create folder as virtual environmoent
+python -m venv .venv
+---- Activate environmoent
+source .venv/Scrips/activate
+
+--Install flask and flask_restful and flask_sqlalchemy
+pip install flask
+pip install flask_restful
+pip install flask_sqlalchemy
+
+--Create a requirements file
+pip freeze > requirements.txt
