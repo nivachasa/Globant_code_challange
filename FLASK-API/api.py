@@ -1,13 +1,13 @@
 ##Import libraies
 from flask import Flask
-from flask_sqlalchemy from flask_sqlalchemy
+from flask_sqlalchemy import SQLAlchemy
 
 ## Cretae app Flask
 app=Flask(__name__)
 
 ## DB location
-app.config['SQL_DATABASE']= 'sqlite:///database.db'
-db = SQLAklchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///database.db'
+db = SQLAlchemy(app)
 
 ## Class Departments table definition
 class Departments(db.Model):
@@ -35,8 +35,8 @@ class HiredEmployees(db.Model):
     name=db.Column(db.String(80), unique=False, nullable=False)
     ## ISO format: year, month, day, hour, minutes, seconds, and milliseconds. Ex:2021-07-27T16:02:08Z
     datetime=db.Column(db.String(20), unique=False, nullable=False)
-    department_id=db.Column(db.String(20), db.ForeignKey(departments.id), nullable=False)
-    job_id=db.Column(db.String(20), db.ForeignKey(jobs.id), nullable=False)
+    department_id=db.Column(db.String(20), db.ForeignKey(Departments.id), nullable=False)
+    job_id=db.Column(db.String(20), db.ForeignKey(Jobs.id), nullable=False)
 
     def __repr__(self):
         return f"{self.id}, {self.name}"
