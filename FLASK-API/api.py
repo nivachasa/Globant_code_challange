@@ -32,11 +32,11 @@ class Jobs(db.Model):
 class HiredEmployees(db.Model):
     __tablename__ = 'hired_employees'
     id=db.Column(db.Integer, primary_key=True)
-    name=db.Column(db.String(80), unique=False)
+    name=db.Column(db.String(80), unique=False,nullable=False)
     ## ISO format: year, month, day, hour, minutes, seconds, and milliseconds. Ex:2021-07-27T16:02:08Z
-    datetime=db.Column(db.String(80), unique=False)
-    department_id=db.Column(db.Integer, db.ForeignKey(Departments.id))
-    job_id=db.Column(db.Integer, db.ForeignKey(Jobs.id))
+    datetime=db.Column(db.String(80), unique=False, nullable=False)
+    department_id=db.Column(db.Integer, db.ForeignKey(Departments.id), nullable=False)
+    job_id=db.Column(db.Integer, db.ForeignKey(Jobs.id), nullable=False)
 
     def __repr__(self):
         return f"{self.id}, {self.name}"
