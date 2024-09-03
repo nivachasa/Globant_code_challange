@@ -1,10 +1,13 @@
 ##Import libraies
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
 import pandas as pd
 import fastavro
 import os
+from fastavro.schema import load_schema
 
 ## Cretae app Flask
 app=Flask(__name__)
@@ -48,91 +51,57 @@ class HiredEmployees(db.Model):
     def __repr__(self):
         return f"{self.id}, {self.name}"
 
-job_args=reqparse.RequestParser()
-dep_args=reqparse.RequestParser()
-h_e_args=reqparse.RequestParser()
+# job_args=reqparse.RequestParser()
+# dep_args=reqparse.RequestParser()
+# h_e_args=reqparse.RequestParser()
 
-job_args.add_argument('*id', type=int, required=True, help='Job id cannot be empty')
-job_args.add_argument('job', type=str, required=True, help='Job name cannot be empty')
-dep_args.add_argument('*id', type=int, required=True, help='Department id cannot be empty')
-dep_args.add_argument('department', type=str, required=True, help='Department name cannot be empty')
+# job_args.add_argument('*id', type=int, required=True, help='Job id cannot be empty')
+# job_args.add_argument('job', type=str, required=True, help='Job name cannot be empty')
+# dep_args.add_argument('*id', type=int, required=True, help='Department id cannot be empty')
+# dep_args.add_argument('department', type=str, required=True, help='Department name cannot be empty')
 
-## Backup function
-# class BackupDB(Resource):
+# jobsFields ={
+#     'id':fields.Integer,
+#     'job':fields.String,
+# }
+
+# departmentsFields ={
+#     'id':fields.Integer,
+#     'department':fields.String,
+# }
+
+# hiredEmployeesFields ={
+#     'id':fields.Integer,
+#     'name':fields.String,
+#     'datetime':fields.String,
+#     'department_id':fields.Integer,
+#     'jobs_id':fields.Integer,
+# }
+
+# # Jobs table Backup function
+# class BackupJobs(Resource):
+#     @marshal_with(jobsFields)
 #     def get(self):
-#         # Query the database
-#         jobs = Jobs.query.all()
-#         #departments = Departments.query.all()
-#         return jobs#, departments
-#         # hired_employees = HiredEmployees.query.all()
+#         jobs_query = Jobs.query.all()
+#         return jobs_query
 
-#         # # Convert to DataFrames
-#         # jobs_df = pd.DataFrame([(j.id, j.job) for j in jobs], columns=['id', 'title'])
-#         # departments_df = pd.DataFrame([(d.id, d.department) for d in departments], columns=['id', 'name'])
-#         # hired_employees_df = pd.DataFrame([(he.id, he.name, he.datetime, he.job_id, he.department_id) for he in hired_employees], columns=['id', 'name', 'datetime', 'job_id', 'department_id'])
+# # Departments table Backup function
+# class BackupDepartments(Resource):
+#     @marshal_with(departmentsFields)
+#     def get(self):
+#         departments_query = Departments.query.all()
+#         return departments_query
 
-#         # print(jobs_df.head())
-#         # print(departments_df.head())
-#         # print(hired_employees_df.head())
-        
-#         # # Define the schema
-#         # schema = {
-#         #     'doc': 'Database backup',
-#         #     'name': 'Database',
-#         #     'namespace': 'your.namespace',
-#         #     'type': 'record',
-#         #     'fields': [
-#         #         {'name': 'jobs', 'type': {'type': 'array', 'items': {
-#         #             'name': 'Job',
-#         #             'type': 'record',
-#         #             'fields': [
-#         #                 {'name': 'id', 'type': 'int'},
-#         #                 {'name': 'title', 'type': 'string'}
-#         #             ]
-#         #         }}},
-#         #         {'name': 'departments', 'type': {'type': 'array', 'items': {
-#         #             'name': 'Department',
-#         #             'type': 'record',
-#         #             'fields': [
-#         #                 {'name': 'id', 'type': 'int'},
-#         #                 {'name': 'name', 'type': 'string'}
-#         #             ]
-#         #         }}},
-#         #         {'name': 'hired_employees', 'type': {'type': 'array', 'items': {
-#         #             'name': 'HiredEmployee',
-#         #             'type': 'record',
-#         #             'fields': [
-#         #                 {'name': 'id', 'type': 'int'},
-#         #                 {'name': 'name', 'type': 'string'},
-#         #                 {'name': 'datetime', 'type': 'string'},
-#         #                 {'name': 'job_id', 'type': 'int'},
-#         #                 {'name': 'department_id', 'type': 'int'}
-#         #             ]
-#         #         }}}
-#         #     ]
-#         # }
+# # Hired Employees table Backup function
+# class BackupHiredEmployees(Resource):
+#     @marshal_with(hiredEmployeesFields)
+#     def get(self):
+#         hired_employees_query = Jobs.query.all()
+#         return hired_employees_query
 
-#         # # Combine data into a single dictionary
-#         # data = {
-#         #     'jobs': jobs_df.to_dict('records'),
-#         #     'departments': departments_df.to_dict('records'),
-#         #     'hired_employees': hired_employees_df.to_dict('records')
-#         # }
-
-#         # # Write to AVRO file
-#         # with open('backup.avro', 'wb') as out:
-#         #     fastavro.writer(out, schema, [data])
-        
-#         # return jsonify({"message": "Backup created successfully!"})
-
-# api.add_resource(BackupDB, '/backup')
-
-class JobClass(Resource):
-    def get(self):
-        jobs= Jobs.query.all()
-        return jobs
-
-api.add_resource(JobClass, '/api/users/')
+# api.add_resource(BackupJobs, '/backup/jobs')
+# api.add_resource(BackupDepartments, '/backup/departments')
+# api.add_resource(BackupHiredEmployees, '/backup/hired-employees')
 
 ## Main function 
 @app.route('/')
@@ -151,7 +120,6 @@ def upload():
             if (file.filename)!='':
                 file.save(table_list[index]+'.csv') 
         return "<h1>Files Uploaded Successfully.!</h1>"
-
 
 ##  Run app
 if __name__=='__main__':
