@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ### Database Initialization
 
-Before running the application, you need to initialize the database schema. This is done by executing the `db_creation.py` script, which is intended to be run **only once**. This script creates the necessary tables in the database.
+After running the application, you need to initialize the database schema. This is done by executing the `db_creation.py` script, which is intended to be run **only once**. This script creates the necessary tables in the database.
 
 To run the script, use:
 
@@ -88,7 +88,7 @@ This relationship links each hired employee to a specific job. The job_id in the
      ```bash
      python api.py
      ```
-    **Not:** Make sure your virtual enviroment is activated. It run with th command:
+    **Note:** Make sure your virtual enviroment is activated. It run with th command:
     ```bash
      source .venv./bin/activate
      ```
@@ -101,9 +101,9 @@ This relationship links each hired employee to a specific job. The job_id in the
 
 4. **Access the API Endpoints:**
    - **`/upload`**: Gives information about the upload status. Do not need to open it. Button "Upload" redirect it to this endpoint.
-   - **`/backup`**: Gives information about the upload status. Do not need to open it. Button "Backup Now" redirect it to this endpoint.
-   - **`/restore-backup`**: Gives information about the upload status. Do not need to open it. Button "Restore backup" redirect it to this endpoint.
-   - **`/hired_employees_2021`**: Retrieves the report of employees hired in 2021 expleined in queries section. Do not need to open it. Button "Check the data query 1" redirect it to this endpoint.
+   - **`/backup`**: Gives information about the backup status. Do not need to open it. Button "Backup Now" redirect it to this endpoint.
+   - **`/restore-backup`**: Gives information about the restore backup status. Do not need to open it. Button "Restore backup" redirect it to this endpoint.
+   - **`/hired_employees_2021`**: Retrieves the report of employees hired in 2021. Do not need to open it. Button "Check the data query 1" redirect it to this endpoint.
    - **`/departments_above_mean`**: Lists departments that hired more employees than the average. Do not need to open it. Button "Check the data query 2" redirect it to this endpoint.
 
 ### API Requirements
@@ -127,4 +127,3 @@ The required Python packages for running the REST API are specified in the `requ
 - The CSV files are comma-separated and they are downloaded and located in the `csv_files/` folder.
 - The AVRO backup files are located in the `avro_files/` folder.
 - The database is managed using SQLAlchemy, with a SQL database backend.
-- Data
