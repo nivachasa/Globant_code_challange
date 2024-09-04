@@ -44,20 +44,23 @@
 <body>
     <form action="/upload" method="POST" enctype="multipart/form-data">
         <fieldset>
-            <legend>Upload Files</legend>
-            <label for="file">Choose JOBS CSV file to upload:</label>
+            <legend>Upload CSV Files to load in Database</legend>
+            <label for="file">JOBS CSV file to upload:</label>
 			<input type="file" name="file" accept=".csv" /><br>
-			<label for="file">Choose DEPARTMENTS CSV file to upload:</label>
+			<label for="file">DEPARTMENTS CSV file to upload:</label>
 			<input type="file" name="file" accept=".csv" /><br>
-			<label for="file">Choose HIRED EMPLOYEES CSV file to upload:</label>
+			<label for="file">HIRED EMPLOYEES CSV file to upload:</label>
 			<input type="file" name="file" accept=".csv" /><br>
             <input type="submit" value="Upload">
         </fieldset>
     </form>
     <form action="/backup" method="GET">
+        <legend>Backup current Database</legend>
+        <legend for: "submit">AVRO files will be saved in the system file with the current tiemstamp</legend>
         <input type="submit" value="Backup Now">
     </form>
     <form action="/restore-backup" method="POST">
+        <legend>Restore AVRO backup</legend>
         <select name="avro_file_list" id="avro_file_list">
             <option value selected>-- Select an AVRO file --</option>
             {% for file in list_restore -%}
@@ -65,13 +68,16 @@
             {% endfor -%}
         </select>
         <br>
+        <br>
         <input type="submit" value="Restore backup">
     </form>
     <form action="/hired_employees_2021" method="GET">
-        <input type="submit" value="Check query 1">
+        <legend>Number of employees hired for each job and department in 2021 divided by quarter.</legend>
+        <input type="submit" value="Check the data">
     </form>
     <form action="/departments_above_mean" method="GET">
-        <input type="submit" value="Check query 2">
+        <legend>List of number employees hired for each department bigger than the mean in 2021.</legend>
+        <input type="submit" value="Check the data">
     </form>
 </body>
 </html>
