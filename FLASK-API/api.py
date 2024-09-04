@@ -1,13 +1,7 @@
 ##Import libraies
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
-import pandas as pd
-import fastavro
-import os
-from fastavro.schema import load_schema
+from flask_restful import Api, Resource, reqparse, fields, marshal_with
 
 ## Cretae app Flask
 app=Flask(__name__)
@@ -34,7 +28,7 @@ class Jobs(db.Model):
     id=db.Column(db.Integer, primary_key=True)
     job=db.Column(db.String(80), unique=False, nullable=False)
     job_relationship=db.relationship('HiredEmployees', backref='jobs', lazy=True)
-
+    
     def __repr__(self):
         return f'{self.id}, {self.job}'
 
@@ -49,41 +43,41 @@ class HiredEmployees(db.Model):
     job_id=db.Column(db.Integer, db.ForeignKey(Jobs.id), nullable=False)
 
     def __repr__(self):
-        return f"{self.id}, {self.name}"
+        return f"{self.id}, {self.name}, {self.datetime} {self.department_id},{self.job_id}"
 
-# job_args=reqparse.RequestParser()
+job_args=reqparse.RequestParser()
 # dep_args=reqparse.RequestParser()
-# h_e_args=reqparse.RequestParser()
+h_e_args=reqparse.RequestParser()
 
 # job_args.add_argument('*id', type=int, required=True, help='Job id cannot be empty')
 # job_args.add_argument('job', type=str, required=True, help='Job name cannot be empty')
 # dep_args.add_argument('*id', type=int, required=True, help='Department id cannot be empty')
 # dep_args.add_argument('department', type=str, required=True, help='Department name cannot be empty')
 
-# jobsFields ={
-#     'id':fields.Integer,
-#     'job':fields.String,
-# }
+jobsFields ={
+    'id':fields.Integer,
+    'job':fields.String,
+}
 
 # departmentsFields ={
 #     'id':fields.Integer,
 #     'department':fields.String,
 # }
 
-# hiredEmployeesFields ={
-#     'id':fields.Integer,
-#     'name':fields.String,
-#     'datetime':fields.String,
-#     'department_id':fields.Integer,
-#     'jobs_id':fields.Integer,
-# }
+hiredEmployeesFields ={
+    'id':fields.Integer,
+    'name':fields.String,
+    'datetime':fields.String,
+    'department_id':fields.Integer,
+    'jobs_id':fields.Integer,
+}
 
-# # Jobs table Backup function
-# class BackupJobs(Resource):
-#     @marshal_with(jobsFields)
-#     def get(self):
-#         jobs_query = Jobs.query.all()
-#         return jobs_query
+# Jobs table Backup function
+class BackupJobs(Resource):
+    @marshal_with(jobsFields)
+    def get(self):
+        jobs_query = Jobs.query.all()
+        return jobs_query
 
 # # Departments table Backup function
 # class BackupDepartments(Resource):
@@ -92,16 +86,16 @@ class HiredEmployees(db.Model):
 #         departments_query = Departments.query.all()
 #         return departments_query
 
-# # Hired Employees table Backup function
-# class BackupHiredEmployees(Resource):
-#     @marshal_with(hiredEmployeesFields)
-#     def get(self):
-#         hired_employees_query = Jobs.query.all()
-#         return hired_employees_query
+# Hired Employees table Backup function
+class BackupHiredEmployees(Resource):
+    @marshal_with(hiredEmployeesFields)
+    def get(self):
+        hired_employees_query = HiredEmployees.query.all()
+        return jsonify(hired_employees_query)
 
-# api.add_resource(BackupJobs, '/backup/jobs')
+api.add_resource(BackupJobs, '/backup/jobs')
 # api.add_resource(BackupDepartments, '/backup/departments')
-# api.add_resource(BackupHiredEmployees, '/backup/hired-employees')
+api.add_resource(BackupHiredEmployees, '/backup/hired-employees')
 
 ## Main function 
 @app.route('/')
