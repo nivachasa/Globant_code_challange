@@ -1,6 +1,6 @@
 import fastavro
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from api import Departments, Jobs, HiredEmployees
 
 def avro_to_table(file_name, model):
@@ -8,6 +8,12 @@ def avro_to_table(file_name, model):
     engine = create_engine('sqlite:///FLASK-API/instance/database.db')
     Session = sessionmaker(bind=engine)
     session = Session()
+    
+    print (session.query(model.id).count())
+
+    # Delete bd
+    session.execute(delete(model))
+    print (session.query(model.id).count())
 
     # Read from AVRO file
     with open(file_name, 'rb') as f:
@@ -18,6 +24,7 @@ def avro_to_table(file_name, model):
     for record in records:
         obj = model(**record)
         session.add(obj)
+    print (session.query(model.id).count())
 
     # Commit the session to save all records
     session.commit()
@@ -26,6 +33,6 @@ def avro_to_table(file_name, model):
     session.close()
 
 avro_to_table('jobs_2024-09-03 18:32:15.984006.avro', Jobs)
-avro_to_table('departments_2024-09-03 18:32:15.984006.avro', Departments)
-avro_to_table('hired_employees_2024-09-03 18:32:15.984006.avro', HiredEmployees)
+# avro_to_table('departments_2024-09-03 18:32:15.984006.avro', Departments)
+# avro_to_table('hired_employees_2024-09-03 18:32:15.984006.avro', HiredEmployees)
 
