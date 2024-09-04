@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, select, Table, MetaData
 from api import db, app, Departments, Jobs, HiredEmployees
 
 ## Connect to database
-engine=create_engine('sqlite:///FLASK-API/instance/database.db')
+engine=create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
 
 ## Variables declaration
 tablenames=['jobs_table', 'departments_table', 'hired_employees_table']
@@ -70,7 +70,7 @@ def validate_and_clean_data(df, data_dict):
     na_free = df.dropna()
     only_na = df[~df.index.isin(na_free.index)]
     print('Following rows cannot be inserted')
-    print(only_na.head())
+    print(only_na)
     return na_free
 
 ## Load df to db function
@@ -103,7 +103,7 @@ def load_data(df, index, file_name):
 
 ## Read and check empty file
 def read_file(file_name): 
-    with open(file_name) as file:
+    with open('/workspaces/Globant_code_challange/csv_files/'+file_name) as file:
         df = pd.read_csv(file, sep=",", header=None)
         if(df.empty): 
             print ('CSV file is empty') 

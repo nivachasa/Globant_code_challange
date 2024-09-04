@@ -9,7 +9,7 @@ ct = datetime.datetime.now()
 
 def table_to_avro(table_name, model, file_name):
     # Initialize database session
-    engine = create_engine('sqlite:///FLASK-API/instance/database.db')
+    engine = create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -32,7 +32,7 @@ def table_to_avro(table_name, model, file_name):
     records = [{column.name: getattr(row, column.name) for column in model.__table__.columns} for row in data]
 
     # Write to AVRO file
-    with open(file_name, 'wb') as out:
+    with open('/workspaces/Globant_code_challange/avro_files/' + file_name, 'wb') as out:
         fastavro.writer(out, schema, records)
 
     session.close()

@@ -12,7 +12,7 @@ print(avro_file_input, table_name)
 
 def avro_to_table(file_name, model):
     # Initialize database session
-    engine = create_engine('sqlite:///FLASK-API/instance/database.db')
+    engine = create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
     Session = sessionmaker(bind=engine)
     session = Session()
     
@@ -23,7 +23,7 @@ def avro_to_table(file_name, model):
     print (session.query(model.id).count())
 
     # Read from AVRO file
-    with open(file_name, 'rb') as f:
+    with open('/workspaces/Globant_code_challange/avro_files/'+file_name, 'rb') as f:
         reader = fastavro.reader(f)
         records = [record for record in reader]
 

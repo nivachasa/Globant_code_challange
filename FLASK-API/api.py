@@ -11,7 +11,7 @@ import pandas as pd
 app=Flask(__name__)
 
 ## DB location
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db'
 db = SQLAlchemy(app)
 
 ## API as API restful
@@ -97,27 +97,30 @@ api.add_resource(BackupDepartments, '/backup/departments')
 api.add_resource(BackupHiredEmployees, '/backup/hired-employees')
 
 @app.route('/backup', methods=['GET'])
+## Create function for backup
 def backup():
     if request.method == 'GET':   
-        os.system("python FLASK-API/db_backup.py")  
+        os.system("python /workspaces/Globant_code_challange/FLASK-API/db_backup.py")  
         return "<h1>Tables Successfully backup.</h1>"
 
 @app.route('/restore-backup', methods=['POST'])
+## Create function for restore a specif avro file backup
 def restore_backup():
     if request.method == 'POST':
         avro_file=request.form.get('avro_file_list')
-        os.system("python FLASK-API/db_restore_backup.py '" + avro_file + "'")  
+        os.system("python /workspaces/Globant_code_challange/FLASK-API/db_restore_backup.py '" + avro_file + "'")  
         return "<h1>Backup Successfully restored.</h1>"
 
+## List all avro files
 def list_AVRO_files():
     # Set the directory you want to list files from
-    directory = os.getcwd()
+    directory = '/workspaces/Globant_code_challange/avro_files'
     # Get the list of .avro files in the directory
     files = [f for f in os.listdir(directory) if f.endswith('.avro')]
     return files
    
 ## Connect to database
-engine = create_engine('sqlite:///FLASK-API/instance/database.db')
+engine = create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -222,13 +225,8 @@ def departments_above_mean():
     df = pd.DataFrame(data)
     return df.to_html(header="true", table_id="table")
 
-## Main function 
-@app.route('/')
-def home():
-    return render_template("index.html", list_restore=list_AVRO_files())
-
-## Upload function
 @app.route('/upload', methods=['POST']) 
+## Create ipload function
 def upload(): 
     if request.method == 'POST': 
         # Get the list of files from webpage 
@@ -237,11 +235,16 @@ def upload():
         # Iterate for each file in the files List, and Save them 
         for index, file in enumerate(files): 
             if (file.filename)!='':
-                file.save(table_list[index]+'.csv') 
+                file.save('/workspaces/Globant_code_challange/csv_files/'+table_list[index]+'.csv') 
                 
-        os.system("python FLASK-API/db_upload.py")  
+        os.system("python /workspaces/Globant_code_challange/FLASK-API/db_upload.py")  
 
         return "<h1>Files Uploaded Successfully.!</h1>"
+
+@app.route('/')
+## Create home function 
+def home():
+    return render_template("index.html", list_restore=list_AVRO_files())
 
 ##  Run app
 if __name__=='__main__':
