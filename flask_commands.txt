@@ -1,7 +1,12 @@
+----Create dir and Get into folder
+mkdir FLASK-API
+cd FLASK-API
+
 --- Create folder as virtual environmoent
 python -m venv .venv
 ---- Activate environmoent
 source .venv/Scrips/activate
+source /workspaces/Globant_code_challange/FLASK-API/.venv/bin/activate
 
 --Install flask and flask_restful and flask_sqlalchemy
 pip install flask
@@ -9,6 +14,7 @@ pip install flask_restful
 pip install flask_sqlalchemy
 pip install fastavro
 pip install pandas
+pip install sqlalchemy
 
 --Create a requirements file
 pip freeze > requirements.txt

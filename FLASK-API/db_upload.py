@@ -1,11 +1,11 @@
 ## Import libraies
 import re
 import pandas as pd
-from sqlalchemy import create_engine, select, Table, MetaData
-from api import db, app, Departments, Jobs, HiredEmployees
+from sqlalchemy import create_engine
+from api import Departments, Jobs, HiredEmployees
 
 ## Connect to database
-engine=create_engine('sqlite:///FLASK-API/instance/database.db')
+engine=create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
 
 ## Variables declaration
 tablenames=['jobs_table', 'departments_table', 'hired_employees_table']
@@ -54,14 +54,14 @@ def validate_and_clean_data(df, data_dict):
             # # Check for valid foreign key reference
             # if "foreign_key" in rules:
             #     foreign_table, foreign_column = rules["foreign_key"].split('.')
-            #     foreign_ids = db.session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
+            #     foreign_ids = session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
             #     foreign_ids = [id[0] for id in foreign_ids]
             #     df = df.drop(df[~df[col].isin(foreign_ids)].index)
             
             # # Check for valid foreign key reference
             # if "foreign_key" in rules:
             #     foreign_table, foreign_column = rules["foreign_key"].split('.')
-            #     foreign_ids = db.session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
+            #     foreign_ids = session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
             #     foreign_ids = [id[0] for id in foreign_ids]
             #     df = df.drop(df[~df[col].isin(foreign_ids)].index)
     nan_values_count = df.isnull().sum()
@@ -70,7 +70,7 @@ def validate_and_clean_data(df, data_dict):
     na_free = df.dropna()
     only_na = df[~df.index.isin(na_free.index)]
     print('Following rows cannot be inserted')
-    print(only_na.head())
+    print(only_na)
     return na_free
 
 ## Load df to db function
@@ -100,10 +100,11 @@ def load_data(df, index, file_name):
     except Exception as fnf_error:
         print(fnf_error)
         print(f"Explanation: We cannot load the '{file_name}' in the database")
+        raise
 
 ## Read and check empty file
 def read_file(file_name): 
-    with open(file_name) as file:
+    with open('/workspaces/Globant_code_challange/csv_files/'+file_name) as file:
         df = pd.read_csv(file, sep=",", header=None)
         if(df.empty): 
             print ('CSV file is empty') 
@@ -124,7 +125,6 @@ def csv_files(tablenames):
             print(fnf_error)
             print(f"Explanation: We cannot find the '{file_name}' file")
 
-if __name__ == "__main__":
-    csv_files(tablenames)
+csv_files(tablenames)
 
 
