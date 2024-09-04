@@ -1,8 +1,8 @@
 ## Import libraies
 import re
 import pandas as pd
-from sqlalchemy import create_engine, select, Table, MetaData
-from api import db, app, Departments, Jobs, HiredEmployees
+from sqlalchemy import create_engine
+from api import Departments, Jobs, HiredEmployees
 
 ## Connect to database
 engine=create_engine('sqlite:////workspaces/Globant_code_challange/FLASK-API/instance/database.db')
@@ -54,14 +54,14 @@ def validate_and_clean_data(df, data_dict):
             # # Check for valid foreign key reference
             # if "foreign_key" in rules:
             #     foreign_table, foreign_column = rules["foreign_key"].split('.')
-            #     foreign_ids = db.session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
+            #     foreign_ids = session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
             #     foreign_ids = [id[0] for id in foreign_ids]
             #     df = df.drop(df[~df[col].isin(foreign_ids)].index)
             
             # # Check for valid foreign key reference
             # if "foreign_key" in rules:
             #     foreign_table, foreign_column = rules["foreign_key"].split('.')
-            #     foreign_ids = db.session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
+            #     foreign_ids = session.query(getattr(eval(foreign_table.capitalize()), foreign_column)).all()
             #     foreign_ids = [id[0] for id in foreign_ids]
             #     df = df.drop(df[~df[col].isin(foreign_ids)].index)
     nan_values_count = df.isnull().sum()
@@ -100,6 +100,7 @@ def load_data(df, index, file_name):
     except Exception as fnf_error:
         print(fnf_error)
         print(f"Explanation: We cannot load the '{file_name}' in the database")
+        raise
 
 ## Read and check empty file
 def read_file(file_name): 
@@ -124,7 +125,6 @@ def csv_files(tablenames):
             print(fnf_error)
             print(f"Explanation: We cannot find the '{file_name}' file")
 
-if __name__ == "__main__":
-    csv_files(tablenames)
+csv_files(tablenames)
 
 
