@@ -1,5 +1,4 @@
 ## Import libraies
-import sqlite3
 import re
 import pandas as pd
 from sqlalchemy import create_engine, select, Table, MetaData
@@ -68,8 +67,11 @@ def validate_and_clean_data(df, data_dict):
     nan_values_count = df.isnull().sum()
     print(f'It will be drop: {nan_values_count} rows that contain NaN values')
     # Drop rows with any remaining None values (indicating missing required columns)
-    df = df.dropna()
-    return df
+    na_free = df.dropna()
+    only_na = df[~df.index.isin(na_free.index)]
+    print('Following rows cannot be inserted')
+    print(only_na.head())
+    return na_free
 
 ## Load df to db function
 def load_data(df, index, file_name):
@@ -120,7 +122,7 @@ def csv_files(tablenames):
             load_data(df, index, file_name)  
         except FileNotFoundError as fnf_error:
             print(fnf_error)
-            print(f"Explanation: We cannot find the '{file_name}.csv' file")
+            print(f"Explanation: We cannot find the '{file_name}' file")
 
 if __name__ == "__main__":
     csv_files(tablenames)

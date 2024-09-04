@@ -2,6 +2,13 @@ import fastavro
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, delete
 from api import Departments, Jobs, HiredEmployees
+import sys
+
+print('test')
+avro_file_input=sys.argv[1]
+table_name=avro_file_input[0]
+
+print(avro_file_input, table_name)
 
 def avro_to_table(file_name, model):
     # Initialize database session
@@ -32,7 +39,10 @@ def avro_to_table(file_name, model):
     #Close session
     session.close()
 
-avro_to_table('jobs_2024-09-03 18:32:15.984006.avro', Jobs)
-# avro_to_table('departments_2024-09-03 18:32:15.984006.avro', Departments)
-# avro_to_table('hired_employees_2024-09-03 18:32:15.984006.avro', HiredEmployees)
+if table_name == 'j':
+    avro_to_table(avro_file_input, Jobs)
+elif table_name == 'd':
+    avro_to_table(avro_file_input, Departments)
+elif table_name == 'h':
+    avro_to_table(avro_file_input, HiredEmployees)
 

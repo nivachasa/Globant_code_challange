@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Upload Multiple Files : GFG</title>
@@ -39,22 +40,6 @@
             background-color: #45a049;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('file');
-            const submitButton = document.getElementById('submit-button');
-            
-            fileInput.addEventListener('change', function() {
-                if (fileInput.files.length === 0) {
-                    fileInput.setCustomValidity('Por favor, seleccione al menos un archivo para subir.');
-                    submitButton.value = 'Subir archivos';
-                } else {
-                    fileInput.setCustomValidity('');
-                    submitButton.value = 'Archivos seleccionados, listo para subir';
-                }
-            });
-        });
-    </script>
 </head>
 <body>
     <form action="/upload" method="POST" enctype="multipart/form-data">
@@ -68,6 +53,25 @@
 			<input type="file" name="file" accept=".csv" /><br>
             <input type="submit" value="Upload">
         </fieldset>
+    </form>
+    <form action="/backup" method="GET">
+        <input type="submit" value="Backup Now">
+    </form>
+    <form action="/restore-backup" method="POST">
+        <select name="avro_file_list" id="avro_file_list">
+            <option value selected>-- Select an AVRO file --</option>
+            {% for file in list_restore -%}
+            <option value="{{ file }}">{{ file }}</option>
+            {% endfor -%}
+        </select>
+        <br>
+        <input type="submit" value="Restore backup">
+    </form>
+    <form action="/hired_employees_2021" method="GET">
+        <input type="submit" value="Check query 1">
+    </form>
+    <form action="/departments_above_mean" method="GET">
+        <input type="submit" value="Check query 2">
     </form>
 </body>
 </html>
