@@ -37,6 +37,7 @@ def avro_to_table(file_name, model):
     session.close()
 
 print('Restore file: ' + avro_file_input)
+print(table_name)
 if table_name == 'j':
     print('Restore model: ' + 'Jobs')
     avro_to_table(avro_file_input, Jobs)

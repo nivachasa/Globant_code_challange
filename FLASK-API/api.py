@@ -73,7 +73,7 @@ def restore_backup():
         ## Execute db_restore_backup python file
         try:
             app.logger.info('Executing db_restore_backup python file')
-            subprocess.run(["python","/workspaces/Globant_code_challange/FLASK-API/db_restore_backup.py", "'" + avro_file + "'"], check = True)
+            subprocess.run(["python","/workspaces/Globant_code_challange/FLASK-API/db_restore_backup.py", avro_file], check = True)
             label="<h1>Restore backup successfully restored.</h1>"
         except Exception as e:
             app.logger.error(e)
